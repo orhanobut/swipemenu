@@ -1,4 +1,3 @@
-
 package com.orhanobut.android.swipemenu;
 
 import android.opengl.GLES20;
@@ -10,6 +9,9 @@ import java.nio.ShortBuffer;
 
 public abstract class WorldObject {
 
+    private static final int COORDS_PER_VERTEX = 3;
+    private final float[] MVPMatrix = new float[16];
+    
     private float x;
     private float y;
     private float z;
@@ -17,12 +19,10 @@ public abstract class WorldObject {
     private float[] color;
     private short[] drawOrder;
     private float[] vertices;
-    private float[] MVPMatrix = new float[16];
-
     private int programHandle;
     private FloatBuffer modelCoordinatesBuffer;
     private int vertexStride;
-    private int COORDS_PER_VERTEX = 3;
+ 
     private ShortBuffer drawListBuffer;
 
     /**
