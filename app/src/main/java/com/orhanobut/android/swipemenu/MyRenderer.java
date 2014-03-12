@@ -49,11 +49,11 @@ public class MyRenderer implements GLSurfaceView.Renderer {
         if (isRotating()) {
             update();
         } else {
-            // buzzControl++;
-            // jump();
+            setBuzzControl(getBuzzControl() + 1);
+            jump();
         }
 
-        draw();
+        refreshModelMatrices();
 
         try {
             Thread.sleep(VELOCITY);
@@ -178,7 +178,7 @@ public class MyRenderer implements GLSurfaceView.Renderer {
 
     }
 
-    protected void draw() {
+    protected void refreshModelMatrices() {
 
         for (int i = 0; i < getSquares().length; i++) {
             Square s = getSquares()[i];
@@ -234,9 +234,9 @@ public class MyRenderer implements GLSurfaceView.Renderer {
 
     }
 
-    private void jump() {
+    protected void jump() {
         Square s = getSquares()[getDrawOrder()[3]];
-        if (buzzControl <= 40) {
+        if (getBuzzControl() <= 40) {
             float offset = 0.025f;
             if (s.getY() <= 0) {
                 setJumpDirection(1f);
@@ -244,8 +244,8 @@ public class MyRenderer implements GLSurfaceView.Renderer {
                 setJumpDirection(-1f);
             }
             s.setY(s.getY() + getJumpDirection() * offset);
-        } else if (buzzControl == 140) {
-            buzzControl = 0;
+        } else if (getBuzzControl() == 140) {
+            setBuzzControl(0);
             s.setY(0.0f);
         }
     }
@@ -263,11 +263,11 @@ public class MyRenderer implements GLSurfaceView.Renderer {
         float mLeft = -ratio * mBottom;
         float mRight = -ratio * mTop;
 
-        MyGLSurfaceView.width = ((atZ - eyeZ) * (mLeft - mRight)) / near;
-        MyGLSurfaceView.width = Math.abs(MyGLSurfaceView.width);
+        MyGLSurfaceView.WIDTH = ((atZ - eyeZ) * (mLeft - mRight)) / near;
+        MyGLSurfaceView.WIDTH = Math.abs(MyGLSurfaceView.WIDTH);
 
-        MyGLSurfaceView.height = ((atZ - eyeZ) * (mTop - mBottom)) / near;
-        MyGLSurfaceView.height = Math.abs(MyGLSurfaceView.height);
+        MyGLSurfaceView.HEIGHT = ((atZ - eyeZ) * (mTop - mBottom)) / near;
+        MyGLSurfaceView.HEIGHT = Math.abs(MyGLSurfaceView.HEIGHT);
 
         Matrix.frustumM(getPMatrix(), 0, mLeft, mRight, mBottom, mTop, near, far);
     }
@@ -296,6 +296,11 @@ public class MyRenderer implements GLSurfaceView.Renderer {
         init();
 
     }
+
+
+
+
+    // getters and setters
 
     public float getDirection() {
         return direction;
@@ -371,5 +376,13 @@ public class MyRenderer implements GLSurfaceView.Renderer {
 
     public void setJumpDirection(float jumpDirection) {
         this.jumpDirection = jumpDirection;
+    }
+
+    public int getBuzzControl() {
+        return buzzControl;
+    }
+
+    public void setBuzzControl(int buzzControl) {
+        this.buzzControl = buzzControl;
     }
 }

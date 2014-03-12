@@ -10,15 +10,13 @@ import android.view.MotionEvent;
 public class MyGLSurfaceView extends GLSurfaceView {
 
     private MyRenderer renderer;
-    private Context context;
-    public static float width;
-    public static float height;
+    public static float WIDTH;
+    public static float HEIGHT;
     private float previousX;
     private boolean rotate = false;
 
     public MyGLSurfaceView(Context context, MyRenderer renderer) {
         super(context);
-        this.context = context;
         setEGLContextClientVersion(2);
         this.renderer = renderer;
         setRenderer(renderer);
@@ -26,9 +24,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
     public MyGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
         setEGLContextClientVersion(2);
-        renderer = new MyRenderer(this.context);
+        renderer = new MyRenderer(context);
         setRenderer(renderer);
     }
 
@@ -81,11 +78,11 @@ public class MyGLSurfaceView extends GLSurfaceView {
     private boolean checkIfTouchFocused(float x, float y) {
         int width = getWidth();
         int height = getHeight();
-        float x2 = (x * MyGLSurfaceView.width) / (float) width;
-        float y2 = (y * MyGLSurfaceView.height) / (float) height;
+        float x2 = (x * MyGLSurfaceView.WIDTH) / (float) width;
+        float y2 = (y * MyGLSurfaceView.HEIGHT) / (float) height;
 
-        if ((x2 >= ((MyGLSurfaceView.width - 1) / 2)) && (x2 <= ((MyGLSurfaceView.width + 1) / 2))) {
-            if ((y2 >= ((MyGLSurfaceView.height - 1) / 2)) && (y2 <= ((MyGLSurfaceView.height + 1) / 2))) {
+        if ((x2 >= ((MyGLSurfaceView.WIDTH - 1) / 2)) && (x2 <= ((MyGLSurfaceView.WIDTH + 1) / 2))) {
+            if ((y2 >= ((MyGLSurfaceView.HEIGHT - 1) / 2)) && (y2 <= ((MyGLSurfaceView.HEIGHT + 1) / 2))) {
                 return true;
             }
         }

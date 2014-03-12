@@ -17,12 +17,12 @@ public abstract class WorldObject {
     private float[] color;
     private short[] drawOrder;
     private float[] vertices;
-    private float[] MVPMatrix = new float[16];
+    private final float[] MVPMatrix = new float[16];
 
     private int programHandle;
     private FloatBuffer modelCoordinatesBuffer;
     private int vertexStride;
-    private int COORDS_PER_VERTEX = 3;
+    private final int COORDS_PER_VERTEX = 3;
     private ShortBuffer drawListBuffer;
 
     /**
@@ -48,17 +48,6 @@ public abstract class WorldObject {
     public float[] textureCoordinates;
     public FloatBuffer textureBuffer;
 
-    final float[] cubeTextureCoordinateData = {
-            // Front face
-
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            1.0f, 0.0f,
-
-    };
 
     public WorldObject(float[] vertices, short[] drawOrder, String vertexShaderCode,
                        String fragmentShaderCode) {
@@ -98,7 +87,7 @@ public abstract class WorldObject {
 
         vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-        // initialize byte buffer for the draw list
+        // initialize byte buffer for the refreshModelMatrices list
         ByteBuffer dlb = ByteBuffer.allocateDirect(
                 // (# of coordinate values * 2 bytes per short)
                 getDrawOrder().length * 2);
@@ -121,29 +110,27 @@ public abstract class WorldObject {
         GLES20.glUseProgram(programHandle);
 
         // get handle to vertex shader's vPosition member
-        int mPositionHandle = GLES20.glGetAttribLocation(programHandle,
+        int positionHandle = GLES20.glGetAttribLocation(programHandle,
                 "vPosition");
 
         // Enable a handle to the triangle vertices
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
+        GLES20.glEnableVertexAttribArray(positionHandle);
 
         // load vertex data
-        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
+        GLES20.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false, vertexStride, modelCoordinatesBuffer);
 
         // get handle to fragment shader's vColor member
-        int mColorHandle = GLES20
-                .glGetUniformLocation(programHandle, "vColor");
+        int colorHandle = GLES20.glGetUniformLocation(programHandle, "vColor");
 
         // Set color for drawing the triangle
-        GLES20.glUniform4fv(mColorHandle, 1, getColor(), 0);
+        GLES20.glUniform4fv(colorHandle, 1, getColor(), 0);
 
         // get handle to shape's transformation matrix
-        int mMVPMatrixHandle = GLES20.glGetUniformLocation(programHandle,
-                "uMVPMatrix");
+        int MVPMatrixHandle = GLES20.glGetUniformLocation(programHandle, "uMVPMatrix");
 
         // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, getMVPMatrix(), 0);
+        GLES20.glUniformMatrix4fv(MVPMatrixHandle, 1, false, getMVPMatrix(), 0);
 
         // GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 12);
 
@@ -151,7 +138,7 @@ public abstract class WorldObject {
                 GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
 
         // Disable vertex array
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
+        GLES20.glDisableVertexAttribArray(positionHandle);
     }
 
     public void drawWithTexture() {
@@ -159,29 +146,27 @@ public abstract class WorldObject {
         GLES20.glUseProgram(programHandle);
 
         // get handle to vertex shader's vPosition member
-        int mPositionHandle = GLES20.glGetAttribLocation(programHandle,
-                "vPosition");
+        int positionHandle = GLES20.glGetAttribLocation(programHandle,"vPosition");
 
         // Enable a handle to the triangle vertices
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
+        GLES20.glEnableVertexAttribArray(positionHandle);
 
         // load vertex data
-        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
+        GLES20.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false, vertexStride, modelCoordinatesBuffer);
 
         // get handle to fragment shader's vColor member
-        int mColorHandle = GLES20
-                .glGetUniformLocation(programHandle, "vColor");
+        int colorHandle = GLES20.glGetUniformLocation(programHandle, "vColor");
 
         // Set color for drawing the triangle
-        GLES20.glUniform4fv(mColorHandle, 1, getColor(), 0);
+        GLES20.glUniform4fv(colorHandle, 1, getColor(), 0);
 
         textureCoordinateHandle = GLES20.glGetAttribLocation(programHandle, "a_TexCoordinate");
         textureUniformHandle = GLES20.glGetUniformLocation(programHandle, "u_Texture");
 
 
-        GLES20.glVertexAttribPointer(textureCoordinateHandle, textureCoordinateDataSize, GLES20.GL_FLOAT, false,
-                0, textureBuffer);
+        GLES20.glVertexAttribPointer(textureCoordinateHandle, textureCoordinateDataSize,
+                GLES20.GL_FLOAT, false, 0, textureBuffer);
 
         GLES20.glEnableVertexAttribArray(textureCoordinateHandle);
 
@@ -198,11 +183,10 @@ public abstract class WorldObject {
 
 
         // get handle to shape's transformation matrix
-        int mMVPMatrixHandle = GLES20.glGetUniformLocation(programHandle,
-                "uMVPMatrix");
+        int MVPMatrixHandle = GLES20.glGetUniformLocation(programHandle, "uMVPMatrix");
 
         // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, getMVPMatrix(), 0);
+        GLES20.glUniformMatrix4fv(MVPMatrixHandle, 1, false, getMVPMatrix(), 0);
 
 
         GLES20.glEnable(GLES20.GL_BLEND);
@@ -213,8 +197,12 @@ public abstract class WorldObject {
                 GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
 
         // Disable vertex array
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
+        GLES20.glDisableVertexAttribArray(positionHandle);
     }
+
+
+
+    // getters and setters
 
     public float getX() {
         return x;
@@ -276,7 +264,4 @@ public abstract class WorldObject {
         return MVPMatrix;
     }
 
-    public void setMVPMatrix(float[] MVPMatrix) {
-        this.MVPMatrix = MVPMatrix;
-    }
 }

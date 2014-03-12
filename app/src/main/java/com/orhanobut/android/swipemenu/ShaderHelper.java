@@ -5,10 +5,8 @@ import android.opengl.GLES20;
 public class ShaderHelper {
 
     public static int initShader(String vertexShaderCode, String fragmentShaderCode) {
-        int vertexShaderHandle = loadShader(GLES20.GL_VERTEX_SHADER,
-                vertexShaderCode);
-        int fragmentShaderHandle = loadShader(GLES20.GL_FRAGMENT_SHADER,
-                fragmentShaderCode);
+        int vertexShaderHandle = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+        int fragmentShaderHandle = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
         int programHandle = GLES20.glCreateProgram();
 

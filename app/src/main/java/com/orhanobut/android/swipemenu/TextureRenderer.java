@@ -125,11 +125,11 @@ public class TextureRenderer extends MyRenderer {
         if (isRotating()) {
             update();
         } else {
-            // buzzControl++;
-            // jump();
+            setBuzzControl(getBuzzControl()+1);
+            jump();
         }
 
-        draw();
+        refreshModelMatrices();
 
         try {
             Thread.sleep(VELOCITY);
