@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * Created by limon on 08.03.2014.
+ * Created by nr4bt on 08.03.2014.
  */
 public class TextureActivity extends Activity {
 
